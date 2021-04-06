@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 info:
-  version: 1.0.0
+  version: 1.0.2
   title: Simple store
   license:
     name: MIT
@@ -45,7 +45,7 @@ paths:
         '200':
           description: A paged array of products
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/PaginatedCollectionOfProducts"
         default:
@@ -54,6 +54,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+              examples:
+                SearchLimitError:
+                  value:
+                    code : 525
+                    message : "Search limit cannot exceed 100 items."
     post:
       summary: Create a product
       operationId: createProduct
@@ -162,7 +167,7 @@ paths:
         '200':
           description: A list of cart items
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
         default:
@@ -226,7 +231,7 @@ paths:
         '200':
           description: A list of orders
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/PaginatedCollectionOfOrders"
         default:
@@ -271,7 +276,7 @@ paths:
         '200':
           description: A list of orders
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/Order"
         default:
@@ -294,7 +299,7 @@ components:
           items:
             $ref:  "#/components/schemas/OrderItem"
         paymentDetails:
-           $ref:  "#/components/schemas/PaymentDetails"
+          $ref:  "#/components/schemas/PaymentDetails"
         shippingDetails:
           $ref:  "#/components/schemas/Address"
         total:
@@ -314,7 +319,7 @@ components:
         pagination:
           $ref:  "#/components/schemas/Pagination"
 
-    PaymentDetails: 
+    PaymentDetails:
       type: object
       properties:
         type:
@@ -323,13 +328,13 @@ components:
         currency:
           type: string
         details:
-            # if cash then null, else object
+          # if cash then null, else object
           nullable: true
           $ref:  "#/components/schemas/CreditCardDetails"
 
     CreditCardDetails:
       type: object
-      properties: 
+      properties:
         code:
           type: string
         cvv:
@@ -341,7 +346,7 @@ components:
 
     Address:
       type: object
-      properties: 
+      properties:
         country:
           type: string
         state:
@@ -369,7 +374,7 @@ components:
         price:
           type: number
           format: float
-        
+
     Cart:
       type: array
       items:
@@ -400,7 +405,13 @@ components:
           type: string
         category:
           type: string
-        price: 
+        description:
+          type: string
+        productImage:
+          # relative path to product image
+          type: string
+          #later will be changed into ProductImage[]
+        price:
           type: number
           format: float
         created_at:

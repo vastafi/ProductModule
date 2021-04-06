@@ -59,6 +59,8 @@
         },
         "sort-packages": true
     },
+    "name": "",
+    "description": "ModuleProduct",
     "autoload": {
         "psr-4": {
             "App\\": "src/"
