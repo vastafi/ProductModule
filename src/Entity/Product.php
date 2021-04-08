@@ -55,7 +55,9 @@ class Product
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updatedAt=NULL;
+
+
 
     public function getId(): ?int
     {
