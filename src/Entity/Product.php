@@ -159,4 +159,8 @@ class Product
 
         return $this;
     }
+
+    public function toString(){
+        return __CLASS__;
+    }
 }

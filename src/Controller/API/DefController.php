@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefController extends AbstractController{
 
     /**
-     * @Route("/api/v1/products/{productCode}", name="product.details")
+     * @Route("/api/v1/products/{productCode}", name="api.product.details")
      * @param string $productCode
      * @return JsonResponse
      */
