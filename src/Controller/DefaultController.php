@@ -31,17 +31,41 @@ class DefaultController extends AbstractController
      * @return Response
      */
 
-//    public function getProductByCode(Request $request): Response
-//    {
-//        $repo = $this->getDoctrine()->getRepository(Product::class);
-//        $product=$this->$repo->findBy(['code'=> $request->request->get('code')]);
-//        return $this->render('admin/details.html.twig', ['product' => $product]);
-//    }
-
     public function getProductByCode(string $productCode,ProductRepository $productRepository): Response
     {
-        $repo = $this->getDoctrine()->getRepository(Product::class);
-        $product = $productRepository->findOneBy(['code'=>$productCode]);
-        return $this->render('admin/details.html.twig', ['product' => $product]);
+        $productRepository = $this->getDoctrine()->getRepository(Product::class);
+        $product = $productRepository->findOneBy(['code' => $productCode]);
+        {
+            if (!$product) {
+                return $this->render('Exception/errors404.html.twig',['product' => $product]);
+            }
+            return $this->render('admin/details.html.twig', ['product' => $product]);
+        }
     }
+
+
+
+//        if ($productRepository->count(['code'=>$productCode->getCode()])){
+//            return $this->render('Exception/errors404.html.twig', ['errors'=>'not found code'],
+//                'product'=$product,
+//                'form'=>$form->createView(),
+//            ]);
+
+//        if (!$product) {
+//            throw $this->createNotFoundException('Product code not found.');
+//        }
+//        return $this->render('Exception/errors404.html.twig', ['product' => $product]);
+//    }
+
+
+//    public function listAction(Request $request){
+//        $em=$this->getDoctrine()->getManager();
+//        $blogPosts =$em->getRepository()->findAll();
+//        /**
+//         * @var $paginator
+//         */
+//
+//        $paginator=$this->get('');
+//        $paginator->paginate()
+//    }
 }
