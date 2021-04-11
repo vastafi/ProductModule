@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $code;
 
@@ -55,7 +55,7 @@ class Product
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updatedAt = null;
 
     public function getId(): ?int
     {
