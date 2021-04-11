@@ -43,5 +43,13 @@ class ProductController extends AbstractController
     {
         $repo=$this->getDoctrine()->getRepository(Product::class);
         return $this->json($repo->findBy(['code'=>$productCode]));
+
+    }
+
+    /**
+     * @Route ("/create", name="create",methods={"POST"})
+     */
+    public function createProduct(Request $request){
+        $product = new Product();
     }
 }

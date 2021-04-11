@@ -29,17 +29,42 @@ class ProductRepository extends ServiceEntityRepository
 
     public function filter($category, $name, $limit, $page)
     {
-        if($name){
-            $name .= '%';
-        }
+        if ($name==null and $category==null){
         $query = $this->createQueryBuilder('p')
-//            ->andWhere('p.category = :category OR p.name LIKE :name')
-            //            ->andWhere('p.category = :category')
-//               if($category == null){   }
-//           ->andWhere('p.name LIKE :name')
-//            if($name == null){  }
-//            ->setParameters(array('category'=>$category,'name'=>$name))
-                       ->orderBy('p.id', 'ASC')
+            ->orderBy('p.id', 'ASC')
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+        return $query;
+    }
+        else if($category==null) {
+            $query = $this->createQueryBuilder('p')
+                ->andWhere('p.name LIKE :name')
+                ->setParameter('name', $name."%")
+                ->orderBy('p.id', 'ASC')
+                ->setFirstResult($limit * ($page - 1))
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+            return $query;
+        }
+        else if($name==null) {
+            $query = $this->createQueryBuilder('p')
+                ->andWhere('p.category = :category')
+                ->setParameter('category', $category)
+                ->orderBy('p.id', 'ASC')
+                ->setFirstResult($limit * ($page - 1))
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+            return $query;
+        }
+              else{
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.category = :category AND p.name LIKE :name')
+            ->setParameters(array('category'=>$category,'name'=>$name))
+            ->orderBy('p.id', 'ASC')
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit)
             ->getQuery()
@@ -47,6 +72,7 @@ class ProductRepository extends ServiceEntityRepository
         return $query;
     }
 
+   }
 
     // /**
     //  * @return Product[] Returns an array of Product objects

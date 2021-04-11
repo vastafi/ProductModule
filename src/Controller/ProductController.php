@@ -25,7 +25,7 @@ class ProductController extends AbstractController
     {
         $category=$request->query->get('category',null);
         $name=$request->query->get('name',null);
-        $limit=$request->query->get('limit',10);
+        $limit=$request->query->get('limit',8);
         $page=$request->query->get('page',1);
         $products = $productRepository->filter($category,$name,$limit,$page);
 
@@ -37,7 +37,42 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="product_new", methods={"GET","POST"})
+     * @Route("/create", name="product_new", methods={"GET","POST"})
+
+     */
+    public function createProduct(Request $request): Response
+    {
+        $product = new Product();
+        $product->setCreatedAt(new \DateTime(null, new \DateTimeZone('Europe/Athens')));
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $repo = $this->getDoctrine()->getRepository(Product::class);
+            if ($repo->count(['code'=> $product->getCode()]) > 0){
+                #code 400 bad request
+                return $this->render('product/new.html.twig', [
+                    'errors' => ['DublicatedCodeException'],
+                    'product' => $product,
+                    'form' => $form->createView(),
+                ]);
+
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_index');
+        }
+
+        return $this->render('product/new.html.twig', [
+            'product' => $product,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="productnew", methods={"GET","POST"})
      * @param Request $request
      * @return Response
      */
