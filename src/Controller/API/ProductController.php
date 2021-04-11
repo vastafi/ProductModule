@@ -35,17 +35,16 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{productCode}", name="api.product.details")
-     * @param string $productCode
-     * @return JsonResponse
      */
-
-    public function getProductByCode(string $productCode): JsonResponse
+    public function getProductByCode(string $productCode)
     {
         $repo=$this->getDoctrine()->getRepository(Product::class);
-        return $this->json($repo->findBy(['code'=>$productCode]));
-
+        $product = $repo->findBy(['code'=>$productCode]);
+        if(!$product){
+            return new Response('Product not found', 404);
+        }
+        return $this->json($product);
     }
-
     /**
      * @Route ("/create", name="create",methods={"POST"})
      */
