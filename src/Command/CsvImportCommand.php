@@ -44,7 +44,7 @@ class CsvImportCommand extends Command
         $io->title('Attempting to import the data...');
 
         #current path: %kernel.project_dir%/../public/csv/products.csv
-        #the command : php bin/console csv:import %kernel.project_dir%/../public/csv/products.csv
+        #the command from console : php bin/console csv:import %kernel.project_dir%/../public/csv/products.csv
 
         $reader = Reader:: createFromPath($input->getArgument('path'));
 
