@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CsvImportCommand extends Command
 {
@@ -45,7 +46,7 @@ class CsvImportCommand extends Command
 
         #current path: %kernel.project_dir%/../public/csv/products.csv
         #the command from console : php bin/console csv:import %kernel.project_dir%/../public/csv/products.csv
-
+        //$repo = $this->getDoctrine()->getRepository(Product::class);
         $reader = Reader:: createFromPath($input->getArgument('path'));
 
         $results = $reader->fetchAssoc();//iterator
@@ -62,6 +63,9 @@ class CsvImportCommand extends Command
                 ->setProductImage($row['product_image'])
                 ->setCreatedAt(new \DateTime(null, new \DateTimeZone('Europe/Athens')));
 
+//            if ($repo->count(['code'=> $product->getCode()]) > 0){
+//                throw new BadRequestException('Dublicate exception!');
+//            }
             $this->em->persist($product);
 
             $io->progressAdvance();
