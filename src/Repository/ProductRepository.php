@@ -29,49 +29,26 @@ class ProductRepository extends ServiceEntityRepository
 
     public function filter($category, $name, $limit, $page)
     {
-        if ($name==null and $category==null){
-        $query = $this->createQueryBuilder('p')
-            ->orderBy('p.id', 'ASC')
+        $query = $this->createQueryBuilder('p');
+        if(!($name) and $category){
+            $query = $query->andWhere('p.category = :category')
+                ->setParameter('category', $category);
+        }
+        else if((!$category) and $name){
+            $query = $query->andWhere('p.name LIKE :name')
+                ->setParameter('name', $name."%");
+        }
+        else if($category and $name){
+            $query =  $query ->
+            andWhere('p.category = :category AND p.name LIKE :name')
+                ->setParameters(array('category' => $category, 'name' => $name));
+        }
+        $query = $query->orderBy('p.id', 'ASC')
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
         return $query;
-    }
-        else if($category==null) {
-            $query = $this->createQueryBuilder('p')
-                ->andWhere('p.name LIKE :name')
-                ->setParameter('name', $name."%")
-                ->orderBy('p.id', 'ASC')
-                ->setFirstResult($limit * ($page - 1))
-                ->setMaxResults($limit)
-                ->getQuery()
-                ->getResult();
-            return $query;
-        }
-        else if($name==null) {
-            $query = $this->createQueryBuilder('p')
-                ->andWhere('p.category = :category')
-                ->setParameter('category', $category)
-                ->orderBy('p.id', 'ASC')
-                ->setFirstResult($limit * ($page - 1))
-                ->setMaxResults($limit)
-                ->getQuery()
-                ->getResult();
-            return $query;
-        }
-              else{
-        $query = $this->createQueryBuilder('p')
-            ->andWhere('p.category = :category AND p.name LIKE :name')
-            ->setParameters(array('category'=>$category,'name'=>$name))
-            ->orderBy('p.id', 'ASC')
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-        return $query;
-    }
-
    }
 
     // /**
