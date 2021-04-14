@@ -32,7 +32,7 @@ class ProductController extends AbstractController
             if ($repo->count(['code'=> $product->getCode()]) > 0){
                 #code 400 bad request
                 return $this->render('product/new.html.twig', [
-                    'errors' => ['DublicatedCodeException'],
+                    'errors' => ['A product with this code exista already!'],
                     'product' => $product,
                     'form' => $form->createView(),
                 ]);
